@@ -1,0 +1,27 @@
+{
+  "name": "top-caliber-among-us",
+  "version": "1.0.0",
+  "description": "This bot handles some Discord tasks while users in the Among Us channel play the game.",
+  "main": "index.js",
+  "scripts": {
+    "lint": "tslint --project .",
+    "build": "tsc",
+    "build:start": "tsc && npm run start",
+    "build:start-local": "tsc && npm run start:local",
+    "watch": "tsc -w",
+    "start": "node dist/index.js",
+    "start:local": "npm run build && node dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Caliber",
+  "license": "ISC",
+  "dependencies": {
+    "@types/cheerio": "^0.22.6",
+    "@types/node": "^12.0.2",
+    "@types/node-fetch": "^1.6.7",
+    "@types/ws": "^7.2.6",
+    "discord.js": "^12.3.1",
+    "tslint": "^6.1.2",
+    "typescript": "4.0"
+  }
+}

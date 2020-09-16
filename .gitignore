@@ -1,0 +1,7 @@
+.vs
+.vscode
+config.json
+console_error.txt
+console_output.txt
+/dist
+/node_modules
