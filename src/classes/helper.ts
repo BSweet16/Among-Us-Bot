@@ -54,6 +54,5 @@ export function gatherChannelSettings(): ChannelPair[]{
 	let myVoiceChannel = new ChannelObject('754869751347544245', 'Among Us', 'Voice');
 	let myTextChannel = new ChannelObject('754908030327586857', 'general', 'Text');
 	let myChannelPair = new ChannelPair(myVoiceChannel, myTextChannel);
-	console.log(myChannelPair);
 	return [myChannelPair];
 }
