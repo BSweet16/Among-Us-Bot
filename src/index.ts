@@ -25,7 +25,18 @@ client.once('ready', () =>{
 
 // Monitor for people to join the voice channel 
 client.on('voiceStateUpdate', (oldState, newState) => {
-	if (!(newState.member!.roles.cache.has('497919497836167168') || newState.member!.roles.cache.has('647281949651632128'))){ // OMIT Admin/Mod from role changes
+	const omitList = ['497919497836167168', '647281949651632128']; // List of roles to omit from channel permissions modification Admin/Mod from role changes
+	
+	// Determine if we need to omit the user from the discord
+	let omitUser = false;
+	omitList.forEach(userToOmit => {
+		if (newState.member!.roles.cache.has(userToOmit)){
+			omitUser = true;
+		}
+	});
+
+	// // See if voiceStateUpdate is updated for a listed channel pair
+	if (!omitUser){ 
 		let joinedChannel = newState.channel;
 		let discordServer = newState.guild;
 		
