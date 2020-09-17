@@ -7,7 +7,6 @@ import { ChannelObject, ChannelPair } from "./channel";
  */
 export function showBotDescription (givenMessage: Message){
 	let helpMenu = {
-		"content": "**Among Us**",
 		"embed": {
 			"description": "This bot controls server setup for Among Us in Discord. ",
 			"color": 160860,

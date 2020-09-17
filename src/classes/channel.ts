@@ -25,6 +25,7 @@ export class ChannelObject{
 export class ChannelPair{
 	voiceChannel: ChannelObject;
 	textChannel: ChannelObject;
+
 	constructor(newVoiceChannel: ChannelObject, newTextChannel: ChannelObject){
 		this.voiceChannel = newVoiceChannel;
 		this.textChannel = newTextChannel;
