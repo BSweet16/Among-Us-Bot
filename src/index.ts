@@ -8,7 +8,13 @@ import * as helper from '../src/classes/helper';
 // import { readFile } from 'fs';					// Used to read/write from a file. (Import data)
 
 // Global Variables
+enum cardColors{
+	red = '#FD0061',
+	green = '#008E44',
+	yellow = '#F8C300'
+}
 const client = new Client();
+
 let channelPairList: channel.ChannelPair[] = [];			// A GLOBAL list of ChannelPair objects
 
 /**
@@ -75,10 +81,10 @@ client.on('message', message =>{
 	 * @param title - Title of the message embed
 	 * @param content - Message content. This should contain the majority of the message
 	 */
-	function displayMessage (title: string = '', content: string = ''){
+	function displayMessage (title: string = '', content: string = '', cardColor: string = cardColors.green){
 		let newMessage = {
 			"embed": {
-				"color": 160860,
+				"color": cardColor,
 				"fields": [
 					{
 						"name": `${title}`,
@@ -91,6 +97,7 @@ client.on('message', message =>{
 		message.channel.send(newMessage);
 	}
 	
+	// Contents of the chat message
 	let messageContentUpper = message.content.toUpperCase(); 	// Used to provide non-case sensitive commands
 	let messageArrayUpper = messageContentUpper.split(' '); 	// Used to access command information (non-case sensitive)
 	var messageArray = message.content.split(' '); 				// Used to access command information
@@ -112,7 +119,7 @@ client.on('message', message =>{
 		// Create a channel pair
 		if (messageArrayUpper[1] == "ADD"){ 
 			if (messageArray.length !== 4){
-				displayMessage('Among add [Voice Channel ID] [Text Channel ID]', 'Create a new channel pair');
+				displayMessage('Among add [Voice Channel ID] [Text Channel ID]', 'Create a new channel pair', cardColors.yellow);
 			}
 			else{
 				if (+messageArrayUpper[2]){ // Verify Voice Channel ID is a number
@@ -131,10 +138,10 @@ client.on('message', message =>{
 						channelPairList.push(new channel.ChannelPair(newVoiceChannel, newTextChannel));
 						displayMessage(`Channels Successfully paired`, `Voice Channel: **${discordVoiceChannel?.name}** \nText Channel: **${discordTextChannel?.name}**`);
 					} else{
-						displayMessage('Error', '__[Voice Channel ID]__ should be a number.');
+						displayMessage('Error', '__[Voice Channel ID]__ should be a number.', cardColors.red);
 					}
 				} else {
-					displayMessage('Error', '__[Text Channel ID]__ should be a number.');
+					displayMessage('Error', '__[Text Channel ID]__ should be a number.', cardColors.red);
 				}
 			}
 		}
@@ -142,7 +149,7 @@ client.on('message', message =>{
 		// Remove a channel pair
 		else if (messageArrayUpper[1] == "REMOVE"){ 
 			if (messageArray.length !== 4){
-				displayMessage('Among remove [Voice Channel ID] [Text Channel ID]', 'Remove a pre-existing channel pair.');
+				displayMessage('Among remove [Voice Channel ID] [Text Channel ID]', 'Remove a pre-existing channel pair.', cardColors.yellow);
 			}
 			else{
 				if (+messageArrayUpper[2]){ // Verify Voice Channel ID is a number
@@ -172,17 +179,17 @@ client.on('message', message =>{
 						if (foundVoiceChannel && foundTextChannel){
 							displayMessage('Channel pair removed', `Voice Channel: **${foundVoiceChannel.name}** \nText Channel: **${foundTextChannel?.name}**`);
 						} else if (!foundVoiceChannel){
-							displayMessage('Error', 'Unable to find a channel pair with the given __[Voice Channel]__ ID.');
+							displayMessage('Error', 'Unable to find a channel pair with the given __[Voice Channel]__ ID.', cardColors.red);
 						} else if (!foundTextChannel){
-							displayMessage('Error', 'Unable to find a channel pair with the given __[Text Channel]__ ID.');
+							displayMessage('Error', 'Unable to find a channel pair with the given __[Text Channel]__ ID.', cardColors.red);
 						} else{
-							displayMessage('Error', 'Unable to find a channel pair with either channel IDs.');
+							displayMessage('Error', 'Unable to find a channel pair with either channel IDs.', cardColors.red);
 						}
 					} else{
-						displayMessage('Error', '__[Voice Channel ID]__ should be a number.');
+						displayMessage('Error', '__[Voice Channel ID]__ should be a number.', cardColors.red);
 					}
 				} else {
-					displayMessage('Error', '__[Text Channel ID]__ should be a number.');
+					displayMessage('Error', '__[Text Channel ID]__ should be a number.', cardColors.red);
 				}
 			}
 		}
@@ -190,7 +197,7 @@ client.on('message', message =>{
 		// Display all current Channel Pairs
 		else if (messageArrayUpper[1] == "LIST"){ 
 			if (messageArray.length !== 2){
-				displayMessage('Among list', 'Display the current list of Channel Pairs.');
+				displayMessage('Among list', 'Display the current list of Channel Pairs.', cardColors.yellow);
 			}
 			else{
 				// Get Channel Pair data
@@ -210,7 +217,7 @@ client.on('message', message =>{
 
 		// Unknown command
 		else{
-			displayMessage('Unknown Command', 'Try command \"**Among**\" to list available commands.');
+			displayMessage('Unknown Command', 'Try command \"**Among**\" to list available commands.', cardColors.red);
 		} 
 		message.delete(); // Clean chat history
 	}
