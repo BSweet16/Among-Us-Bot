@@ -6,14 +6,14 @@
  * @param newUserList - The list of users currently given access to the channel
  */
 export class ChannelObject{
-	channelID: string;
-	channelName: string;
-	channelType: string;
+	id: string;
+	name: string;
+	type: string;
 	
 	constructor(newChannelID: string = '', newChannelName: string = '', newChannelType: string = ''){
-		this.channelID = newChannelID;
-		this.channelName = newChannelName;
-		this.channelType = newChannelType;
+		this.id = newChannelID;
+		this.name = newChannelName;
+		this.type = newChannelType;
 	}
 }
 
