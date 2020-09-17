@@ -71,6 +71,27 @@ client.on('voiceStateUpdate', (oldState, newState) => {
 });
 
 client.on('message', message =>{ 
+	/**
+	 * Send a message to the user in an embedded format
+	 * @param title - Title of the message embed
+	 * @param content - Message content. This should contain the majority of the message
+	 */
+	function displayMessage (title: string, content: string){
+		let newMessage = {
+			"embed": {
+				"color": 160860,
+				"fields": [
+					{
+						"name": `${title}`,
+						"value": `${content}`,
+						"inline": false
+					}
+				]
+			}
+		};
+		message.channel.send(newMessage);
+	}
+	
 	let messageContentUpper = message.content.toUpperCase(); 	// Used to provide non-case sensitive commands
 	let messageArrayUpper = messageContentUpper.split(' '); 	// Used to access command information (non-case sensitive)
 	
