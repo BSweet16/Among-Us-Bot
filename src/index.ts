@@ -14,7 +14,6 @@ enum cardColors{
 	yellow = '#F8C300'
 }
 const client = new Client();
-
 let channelPairList: channel.ChannelPair[] = [];			// A GLOBAL list of ChannelPair objects
 
 /**
@@ -69,7 +68,10 @@ client.on('voiceStateUpdate', (oldState, newState) => {
 				let discordTextChannel = discordServer.channels.cache.find(discordChannel => {
 					return discordChannel.id === channelPairList[foundChannelPairIndex].textChannel.id;
 				});
-				discordTextChannel!.permissionOverwrites.get(newState.member!.id)!.delete(); // Remove user from channel overwrites. 
+				let permissionStates = discordTextChannel!.permissionOverwrites.get(newState.member!.id)
+				if (permissionStates){
+					permissionStates.delete(); // Remove user from channel overwrites. 
+				}
 			}
 		}
 	}
