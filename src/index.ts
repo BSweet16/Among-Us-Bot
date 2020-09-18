@@ -153,10 +153,18 @@ client.on('message', message =>{
 						});
 
 						// Build a new channel pair with the found channel information
-						let newVoiceChannel = new channel.ChannelObject(discordVoiceChannel?.id, discordVoiceChannel?.name, discordVoiceChannel?.type);
-						let newTextChannel = new channel.ChannelObject(discordTextChannel?.id, discordTextChannel?.name, discordVoiceChannel?.type);
-						channelPairList.push(new channel.ChannelPair(newVoiceChannel, newTextChannel));
-						displayMessage(`Channels Successfully paired`, `Voice Channel: **${discordVoiceChannel?.name}** \nText Channel: **${discordTextChannel?.name}**`);
+						if (discordVoiceChannel){
+							if (discordTextChannel){
+								let newVoiceChannel = new channel.ChannelObject(discordVoiceChannel?.id, discordVoiceChannel?.name, discordVoiceChannel?.type);
+								let newTextChannel = new channel.ChannelObject(discordTextChannel?.id, discordTextChannel?.name, discordVoiceChannel?.type);
+								channelPairList.push(new channel.ChannelPair(newVoiceChannel, newTextChannel));
+								displayMessage(`Channels Successfully paired`, `Voice Channel: **${discordVoiceChannel?.name}** \nText Channel: **${discordTextChannel?.name}**`);
+							} else{
+								displayMessage('Error', '__[Text Channel ID]__ not found.', cardColors.red);
+							}
+						} else{
+							displayMessage('Error', '__[Voice Channel ID]__ not found.', cardColors.red);
+						}
 					} else{
 						displayMessage('Error', '__[Voice Channel ID]__ should be a number.', cardColors.red);
 					}
