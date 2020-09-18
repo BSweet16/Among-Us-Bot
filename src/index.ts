@@ -30,7 +30,7 @@ client.once('ready', () =>{
 
 // Monitor for people to join the voice channel 
 client.on('voiceStateUpdate', (oldState, newState) => {
-	const omitList = ['497919497836167168', '647281949651632128']; // List of roles to omit from channel permissions modification Admin/Mod from role changes
+	const omitList = ['497919497836167168']; // List of roles to omit from channel permissions modification Admin from role changes
 	
 	// Determine if we need to omit the user from the discord
 	let omitUser = false;
