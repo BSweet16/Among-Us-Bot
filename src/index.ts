@@ -1,5 +1,5 @@
 // Includes
-import { Client } from 'discord.js';
+import { Client, GuildMember } from 'discord.js';
 import { prefix, token } from '../config.json';
 import * as channel from '../src/classes/channel';
 import * as helper from '../src/classes/helper';
@@ -98,6 +98,21 @@ client.on('message', message =>{
 		};
 		message.channel.send(newMessage);
 	}
+
+	/**
+	 * Determines if the given user has the role "Admin"
+	 * @param member - The member object to evaluate
+	 * @returns - True if the user has Admin role
+	 */
+	function isAdmin(member: GuildMember | null): boolean{
+		if (member){
+			let foundAdmin = member.roles.cache.find(role => role.name === 'Admin');
+			if (foundAdmin){
+				return true;
+			}
+		} 
+		return false;
+	}
 	
 	// Contents of the chat message
 	let messageContentUpper = message.content.toUpperCase(); 	// Used to provide non-case sensitive commands
@@ -122,6 +137,9 @@ client.on('message', message =>{
 		if (messageArrayUpper[1] == "ADD"){ 
 			if (messageArray.length !== 4){
 				displayMessage('Among add [Voice Channel ID] [Text Channel ID]', 'Create a new channel pair', cardColors.yellow);
+			}
+			else if (!isAdmin(message.member)){
+				displayMessage('Invalid Permissions', 'You must have the \'Admin\' role to perform this command.', cardColors.red);
 			}
 			else{
 				if (+messageArrayUpper[2]){ // Verify Voice Channel ID is a number
