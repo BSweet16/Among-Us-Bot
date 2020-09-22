@@ -104,13 +104,25 @@ client.on('message', message =>{
 	 * @param member - The member object to evaluate
 	 * @returns - True if the user has Admin role
 	 */
-	function isAdmin(member: GuildMember | null): boolean{
+	function isAdminRole(member: GuildMember | null): boolean{
 		if (member){
 			let foundAdmin = member.roles.cache.find(role => role.name === 'Admin');
 			if (foundAdmin){
 				return true;
 			}
 		} 
+		return false;
+	}
+
+	/**
+	 * Determines if the given user has the server permissions for an ADMINISTRATOR
+	 * @param member - The member object to evaluate
+	 * @returns - True if the user has Admin permissions from the server
+	 */
+	function isAdmin(member: GuildMember | null){
+		if (member){
+			return message.member?.hasPermission("ADMINISTRATOR")
+		}
 		return false;
 	}
 	
@@ -134,11 +146,11 @@ client.on('message', message =>{
 	else if(messageArrayUpper[0] === `${prefix}` || messageArrayUpper[0] === `${prefix}`[0]){
 
 		// Create a channel pair
-		if (messageArrayUpper[1] == "ADD"){ 
-			if (messageArray.length !== 4){
+		if (messageArrayUpper[1] === "ADD"){ 
+			if (messageArray.length !== 4){ // Incorrect number of parameters
 				displayMessage('Among add [Voice Channel ID] [Text Channel ID]', 'Create a new channel pair', cardColors.yellow);
 			}
-			else if (!isAdmin(message.member)){
+			else if (!isAdmin(message.member) &&  !isAdminRole(message.member)){ // Check role permissions
 				displayMessage('Invalid Permissions', 'You must have the \'Admin\' role to perform this command.', cardColors.red);
 			}
 			else{
@@ -176,8 +188,11 @@ client.on('message', message =>{
 
 		// Remove a channel pair
 		else if (messageArrayUpper[1] == "REMOVE"){ 
-			if (messageArray.length !== 4){
+			if (messageArray.length !== 4){ // Incorrect number of parameters
 				displayMessage('Among remove [Voice Channel ID] [Text Channel ID]', 'Remove a pre-existing channel pair.', cardColors.yellow);
+			}
+			else if (!isAdmin(message.member) &&  !isAdminRole(message.member)){ // Check role permissions
+				displayMessage('Invalid Permissions', 'You must have the \'Admin\' role to perform this command.', cardColors.red);
 			}
 			else{
 				if (+messageArrayUpper[2]){ // Verify Voice Channel ID is a number
