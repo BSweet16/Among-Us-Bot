@@ -30,48 +30,36 @@ client.once('ready', () =>{
 
 // Monitor for people to join the voice channel 
 client.on('voiceStateUpdate', (oldState, newState) => {
-	const omitList = ['497919497836167168']; // List of roles to omit from channel permissions modification Admin from role changes
+	// See if voiceStateUpdate is updated for a listed channel pair
+	let joinedChannel = newState.channel;
+	let discordServer = newState.guild;
 	
-	// Determine if we need to omit the user from the discord
-	let omitUser = false;
-	omitList.forEach(userToOmit => {
-		if (newState.member!.roles.cache.has(userToOmit)){
-			omitUser = true;
+	if(joinedChannel) { // User Joins a voice channel
+		// Add the user to the text chat permissions
+		let foundChannelPairIndex = channelPairList.findIndex(channelPair => channelPair.voiceChannel.id === newState.channelID); // Compare with the Voice Channel ID from the user
+		if (foundChannelPairIndex >= 0){ 
+			// Define permissions
+			let overwriteOptions = { 
+				VIEW_CHANNEL: true
+			};
+
+			// Find channel and update it
+			let discordTextChannel = discordServer.channels.cache.find(discordChannel => {
+				return discordChannel.id === channelPairList[foundChannelPairIndex].textChannel.id;
+			});
+			discordTextChannel!.updateOverwrite(newState.member!, overwriteOptions);
 		}
-	});
-
-	// // See if voiceStateUpdate is updated for a listed channel pair
-	if (!omitUser){ 
-		let joinedChannel = newState.channel;
-		let discordServer = newState.guild;
-		
-		if(joinedChannel) { // User Joins a voice channel
-			// Add the user to the text chat permissions
-			let foundChannelPairIndex = channelPairList.findIndex(channelPair => channelPair.voiceChannel.id === newState.channelID); // Compare with the Voice Channel ID from the user
-			if (foundChannelPairIndex >= 0){ 
-				// Define permissions
-				let overwriteOptions = { 
-					VIEW_CHANNEL: true
-				};
-
-				// Find channel and update it
-				let discordTextChannel = discordServer.channels.cache.find(discordChannel => {
-					return discordChannel.id === channelPairList[foundChannelPairIndex].textChannel.id;
-				});
-				discordTextChannel!.updateOverwrite(newState.member!, overwriteOptions);
-			}
-		} else if (!joinedChannel && oldState.channel) { // User leaves a voice channel
-			// Remove the user from the text chat permissions
-			let foundChannelPairIndex = channelPairList.findIndex(channelPair => channelPair.voiceChannel.id === oldState.channelID); // Compare with the Voice Channel ID from the user
-			if (foundChannelPairIndex >= 0){ 
-				// Find channel and update it
-				let discordTextChannel = discordServer.channels.cache.find(discordChannel => {
-					return discordChannel.id === channelPairList[foundChannelPairIndex].textChannel.id;
-				});
-				let permissionStates = discordTextChannel!.permissionOverwrites.get(newState.member!.id)
-				if (permissionStates){
-					permissionStates.delete(); // Remove user from channel overwrites. 
-				}
+	} else if (!joinedChannel && oldState.channel) { // User leaves a voice channel
+		// Remove the user from the text chat permissions
+		let foundChannelPairIndex = channelPairList.findIndex(channelPair => channelPair.voiceChannel.id === oldState.channelID); // Compare with the Voice Channel ID from the user
+		if (foundChannelPairIndex >= 0){ 
+			// Find channel and update it
+			let discordTextChannel = discordServer.channels.cache.find(discordChannel => {
+				return discordChannel.id === channelPairList[foundChannelPairIndex].textChannel.id;
+			});
+			let permissionStates = discordTextChannel!.permissionOverwrites.get(newState.member!.id)
+			if (permissionStates){
+				permissionStates.delete(); // Remove user from channel overwrites. 
 			}
 		}
 	}
